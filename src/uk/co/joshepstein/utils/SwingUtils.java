@@ -20,7 +20,30 @@ public class SwingUtils {
 		panelRoot = new JPanel();
 		root.add(panelRoot);
 		root.setVisible(true);
+		showOnScreen(1, root);
 		return new Pair<>(root, panelRoot);
+	}
+
+	/**
+	 * Utility function for when on Home PC as it has 3 screens and the images disappear when moving screens
+	 * @param screen Screen number to display on
+	 * @param frame Frame to display
+	 */
+	public static void showOnScreen(int screen, JFrame frame ) {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gd = ge.getScreenDevices();
+		int width = 0, height = 0;
+		if( screen > -1 && screen < gd.length ) {
+			width = gd[screen].getDefaultConfiguration().getBounds().width;
+			height = gd[screen].getDefaultConfiguration().getBounds().height;
+			frame.setLocation(
+					((width / 2) - (frame.getSize().width / 2)) + gd[screen].getDefaultConfiguration().getBounds().x,
+					((height / 2) - (frame.getSize().height / 2)) + gd[screen].getDefaultConfiguration().getBounds().y
+			);
+			frame.setVisible(true);
+		} else {
+			throw new RuntimeException( "No Screens Found" );
+		}
 	}
 
 }
