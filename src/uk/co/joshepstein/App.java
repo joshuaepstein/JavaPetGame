@@ -1,9 +1,13 @@
 package uk.co.joshepstein;
 
 
+import lombok.Getter;
 import org.pushingpixels.radiance.animation.api.Timeline;
 import uk.co.joshepstein.ui.Background;
 import uk.co.joshepstein.ui.components.animated.LogoAnimation;
+import uk.co.joshepstein.ui.screen.IScreen;
+import uk.co.joshepstein.ui.screen.LoadingScreen;
+import uk.co.joshepstein.ui.screen.Screen;
 import uk.co.joshepstein.utils.Centered;
 import uk.co.joshepstein.utils.ImageHelper;
 import uk.co.joshepstein.utils.Pair;
@@ -11,69 +15,52 @@ import uk.co.joshepstein.utils.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class App {
 
+    private long ticks = 0L;
     private final int width = 1920/2;
     private final int height = 1080/2;
     private JFrame root;
     private JPanel panel;
 
-    private ImageHelper imageHelper;
+    private static ImageHelper imageHelper = new ImageHelper();
+    private List<IScreen> screens = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         new App();
     }
 
     public App() {
-        this.imageHelper = new ImageHelper();
-
         Pair<JFrame, JPanel> setup = SwingUtils.setup(root, panel);
         root = setup.first();
         panel = setup.second();
 
-        new Background("src/resources/sky.png").paintComponent(panel.getGraphics());
+        screens.add(new LoadingScreen());
 
-        Dimension imageSize = ImageHelper.getImageSize("src/resources/logo.png");
-        JPanel logoPanel = new JPanel();
-        logoPanel.setBounds(Centered.width(panel, imageSize.width / 2), Centered.height(panel, imageSize.height / 2), imageSize.width / 2, imageSize.height / 2);
-        logoPanel.setVisible(true);
-        logoPanel.setOpaque(true);
-
-        panel.add(logoPanel);
-        LogoAnimation logo = new LogoAnimation();
-        ImageIcon logoIcon = new ImageIcon("src/resources/logo.png");
-
-        Timeline logoAnimation = Timeline.builder(logo)
-                .addPropertyToInterpolate("opacity", 0f, 1f)
-                .addPropertyToInterpolate("scale", 0.2f, 0.7f)
-                .setDuration(3000)
-                .build();
-
-        logoAnimation.play();
+        for (IScreen screen : screens) {
+            screen.onOpen(root, panel);
+        }
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (logoAnimation.isDone()) {
-                    timer.cancel();
+                for (IScreen screen : screens) {
+                    if (screen.isLoaded()) screen.onTick(0, root, panel);
                 }
-                float opacity = logo.getOpacity();
-                float scale = logo.getScale();
-                int width = (int) ((logoIcon.getIconWidth() / 2) * scale);
-                int height = (int) ((logoIcon.getIconHeight() / 2) * scale);
-                ImageHelper.Image image = new ImageHelper.Image(logoPanel, "src/resources/logo.png", Centered.width(logoPanel, width), Centered.height(logoPanel, height), width, height);
-                imageHelper.drawImage(image, opacity);
+                App.this.ticks++;
             }
-        }, 0, 10);
+        }, 0,  1000 / 60); // 60 FPS
 
         getImageHelper().drawImages();
     }
 
-    public ImageHelper getImageHelper() {
+    public static ImageHelper getImageHelper() {
         return imageHelper;
     }
 

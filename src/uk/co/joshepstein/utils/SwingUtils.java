@@ -42,7 +42,13 @@ public class SwingUtils {
 			);
 			frame.setVisible(true);
 		} else {
-			throw new RuntimeException( "No Screens Found" );
+//			throw new RuntimeException( "No Screens Found" );
+			System.out.println("No Screens Found");
+			// use the default screen
+			frame.setLocation(
+					(gd[0].getDefaultConfiguration().getBounds().width / 2) - (frame.getSize().width / 2),
+					(gd[0].getDefaultConfiguration().getBounds().height / 2) - (frame.getSize().height / 2)
+			);
 		}
 	}
 
