@@ -6,9 +6,6 @@
 
 package uk.co.joshepstein.ui.screen;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.swing.*;
 import java.util.UUID;
 
@@ -19,6 +16,7 @@ public abstract class Screen implements IScreen {
 	private boolean loaded = false;
 	private int width;
 	private int height;
+	private boolean shouldRemove = false;
 
 	public Screen(String name) {
 		this.name = name;
@@ -56,6 +54,14 @@ public abstract class Screen implements IScreen {
 		return height;
 	}
 
+	public boolean shouldRemove() {
+		return shouldRemove;
+	}
+
+	public void setShouldRemove(boolean shouldRemove) {
+		this.shouldRemove = shouldRemove;
+	}
+
 	public void setHeight(int height) {
 		this.height = height;
 	}
@@ -64,5 +70,10 @@ public abstract class Screen implements IScreen {
 	public void onOpen(JFrame frame, JPanel rootPanel) {
 		IScreen.super.onOpen(frame, rootPanel);
 		setLoaded(true);
+	}
+
+	@Override
+	public void onClose() {
+		setShouldRemove(true);
 	}
 }

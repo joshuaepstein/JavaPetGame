@@ -40,4 +40,8 @@ public interface IScreen {
 
 	default void onResize(int width, int height) {}
 
+	boolean shouldRemove();
+
+	void setLoaded(boolean loaded);
+
 }

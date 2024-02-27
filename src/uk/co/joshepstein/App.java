@@ -1,22 +1,15 @@
 package uk.co.joshepstein;
 
 
-import lombok.Getter;
-import org.pushingpixels.radiance.animation.api.Timeline;
-import uk.co.joshepstein.ui.Background;
-import uk.co.joshepstein.ui.components.animated.LogoAnimation;
 import uk.co.joshepstein.ui.screen.IScreen;
 import uk.co.joshepstein.ui.screen.LoadingScreen;
-import uk.co.joshepstein.ui.screen.Screen;
-import uk.co.joshepstein.utils.Centered;
 import uk.co.joshepstein.utils.ImageHelper;
 import uk.co.joshepstein.utils.Pair;
 import uk.co.joshepstein.utils.SwingUtils;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,7 +22,7 @@ public class App {
     private JPanel panel;
 
     private static ImageHelper imageHelper = new ImageHelper();
-    private List<IScreen> screens = new ArrayList<>();
+    private Queue<IScreen> screens = new java.util.LinkedList<>();
 
     public static void main(String[] args) throws Exception {
         new App();
@@ -41,17 +34,25 @@ public class App {
         panel = setup.second();
 
         screens.add(new LoadingScreen());
-
-        for (IScreen screen : screens) {
-            screen.onOpen(root, panel);
-        }
+        screens.add(new LoadingScreen());
+        screens.add(new LoadingScreen());
+        screens.add(new LoadingScreen());
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                for (IScreen screen : screens) {
-                    if (screen.isLoaded()) screen.onTick(0, root, panel);
+                for (IScreen screen : screens.stream().filter(s -> !s.shouldRemove() && s.isLoaded()).toList()) {
+                    if (screen.isLoaded()) screen.onTick(ticks, root, panel);
+                }
+                if (screens.peek() != null && screens.peek().isLoaded()) {
+                    List<IScreen> toRemove = screens.stream().filter(IScreen::shouldRemove).toList();
+                    for (IScreen screen : toRemove) {
+                        screens.remove(screen);
+                    }
+                }
+                if (screens.peek() != null && !screens.peek().isLoaded()) {
+					screens.peek().onOpen(root, panel);
                 }
                 App.this.ticks++;
             }

@@ -20,7 +20,7 @@ public class SwingUtils {
 		panelRoot = new JPanel();
 		root.add(panelRoot);
 		root.setVisible(true);
-		showOnScreen(1, root);
+		showOnScreen(2, root);
 		return new Pair<>(root, panelRoot);
 	}
 
