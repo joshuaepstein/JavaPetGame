@@ -10,6 +10,7 @@ import org.pushingpixels.radiance.animation.api.Timeline;
 import uk.co.joshepstein.App;
 import uk.co.joshepstein.ui.Background;
 import uk.co.joshepstein.ui.components.animated.LogoAnimation;
+import uk.co.joshepstein.ui.screen.impl.Screen;
 import uk.co.joshepstein.utils.Centered;
 import uk.co.joshepstein.utils.ImageHelper;
 
@@ -22,12 +23,12 @@ public class LoadingScreen extends Screen {
 	ImageIcon logoIcon = new ImageIcon("src/resources/logo.png");
 	JLabel logoLabel = new JLabel(logoIcon);
 	Timeline logoAnimation = Timeline.builder(logo)
-			.addPropertyToInterpolate("opacity", 0f, 1f)
 			.addPropertyToInterpolate("scale", 0.2f, 0.7f)
+			.addPropertyToInterpolate("opacity", 0f, 1f)
 			.setDuration(3000)
 			.build();
-	private long additionalWaitingTick = 0l;
-	public static long additionalWaitingTicks = 120l;
+	private long additionalWaitingTick = 0L;
+	public static long additionalWaitingTicks = 120L;
 
 	public LoadingScreen() {
 		super("Loading Screen");
@@ -60,6 +61,8 @@ public class LoadingScreen extends Screen {
 		int height = (int) ((logoIcon.getIconHeight() / 2) * scale);
 		ImageHelper.Image image = new ImageHelper.Image(logoPanel, "src/resources/logo.png", Centered.width(logoPanel, width), Centered.height(logoPanel, height), width, height);
 		App.getImageHelper().drawImage(image, opacity);
+
+		// Below is code to use a JLabel to manage the Icon but I found that it doesnt work.
 //		Dimension imageSize = ImageHelper.getImageSize("src/resources/logo.png");
 //		logoPanel.setBounds(Centered.width(rootPanel, imageSize.width / 2), Centered.height(rootPanel, imageSize.height / 2), imageSize.width / 2, imageSize.height / 2);
 //		logoPanel.setVisible(true);

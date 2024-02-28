@@ -4,9 +4,12 @@
  * Joshua Epstein
  */
 
-package uk.co.joshepstein.ui.screen;
+package uk.co.joshepstein.ui.screen.impl;
+
+import uk.co.joshepstein.App;
 
 import javax.swing.*;
+import java.util.Queue;
 import java.util.UUID;
 
 public abstract class Screen implements IScreen {
@@ -75,5 +78,20 @@ public abstract class Screen implements IScreen {
 	@Override
 	public void onClose() {
 		setShouldRemove(true);
+	}
+
+	@Override
+	public void forceOpen(JFrame frame, JPanel rootPanel) {
+//		setLoaded(false);
+//		onOpen(frame, rootPanel);
+		App.getScreens().peek().onClose();
+		Queue<IScreen> screens = App.getScreens();
+		// add to start of screens
+		for (IScreen screen : screens) {
+			if (screen.getId().equals(this.getId())) {
+				screens.remove(screen);
+				break;
+			}
+		}
 	}
 }

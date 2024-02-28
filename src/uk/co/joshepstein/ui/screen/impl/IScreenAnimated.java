@@ -4,7 +4,7 @@
  * Joshua Epstein
  */
 
-package uk.co.joshepstein.ui.screen;
+package uk.co.joshepstein.ui.screen.impl;
 
 public interface IScreenAnimated extends IScreen {
 

@@ -1,7 +1,7 @@
 package uk.co.joshepstein;
 
 
-import uk.co.joshepstein.ui.screen.IScreen;
+import uk.co.joshepstein.ui.screen.impl.IScreen;
 import uk.co.joshepstein.ui.screen.LoadingScreen;
 import uk.co.joshepstein.utils.ImageHelper;
 import uk.co.joshepstein.utils.Pair;
@@ -22,7 +22,7 @@ public class App {
     private JPanel panel;
 
     private static ImageHelper imageHelper = new ImageHelper();
-    private Queue<IScreen> screens = new java.util.LinkedList<>();
+    private static Queue<IScreen> screens = new java.util.LinkedList<>();
 
     public static void main(String[] args) throws Exception {
         new App();
@@ -63,6 +63,10 @@ public class App {
 
     public static ImageHelper getImageHelper() {
         return imageHelper;
+    }
+
+    public static Queue<IScreen> getScreens() {
+        return screens;
     }
 
 }

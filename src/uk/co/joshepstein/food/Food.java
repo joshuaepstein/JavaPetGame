@@ -1,8 +1,6 @@
 package uk.co.joshepstein.food;
 
-import uk.co.joshepstein.pets.Pet;
-
-import java.util.function.Supplier;
+import uk.co.joshepstein.pets.basic.IPet;
 
 public abstract class Food {
 
@@ -33,5 +31,5 @@ public abstract class Food {
 		return name;
 	}
 
-	public abstract void onFeed(Pet pet);
+	public abstract void onFeed(IPet pet);
 }

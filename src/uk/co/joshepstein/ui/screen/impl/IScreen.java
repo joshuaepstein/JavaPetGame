@@ -4,7 +4,7 @@
  * Joshua Epstein
  */
 
-package uk.co.joshepstein.ui.screen;
+package uk.co.joshepstein.ui.screen.impl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,5 +43,7 @@ public interface IScreen {
 	boolean shouldRemove();
 
 	void setLoaded(boolean loaded);
+
+	void forceOpen(JFrame frame, JPanel rootPanel);
 
 }

@@ -4,18 +4,24 @@
  * Joshua Epstein
  */
 
-package uk.co.joshepstein.pets;
+package uk.co.joshepstein.pets.basic;
 
 import uk.co.joshepstein.food.Food;
 
-public interface Pet {
+import java.util.Random;
 
-	PetType getType();
+public interface IPet {
 
 	String getName();
 
 	int getHealth();
 
+	int getMaxHealth();
+
 	boolean feed(Food food);
+
+	PetTier getTier();
+
+	PetTicker getTicker();
 
 }
