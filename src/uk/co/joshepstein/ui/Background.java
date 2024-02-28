@@ -12,9 +12,15 @@ import java.awt.*;
 public class Background extends JComponent {
 
 	private final String resourceLocation;
+	private boolean scaleForWidth = false;
 
 	public Background(String resourceLocation) {
 		this.resourceLocation = resourceLocation;
+	}
+
+	public Background(String resourceLocation, boolean scaleForWidth) {
+		this.resourceLocation = resourceLocation;
+		this.scaleForWidth = scaleForWidth;
 	}
 
 	@Override
@@ -22,9 +28,24 @@ public class Background extends JComponent {
 		super.paintComponent(g);
 		java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
 		java.awt.Image image = new ImageIcon(resourceLocation).getImage();
-		// the image height is 2048 but the height of the window is 1920/2 - so we need to scale it
-		g2.scale(0.75, 0.75);
+		if (scaleForWidth) {
+					if (image.getWidth(this) > 1920/2) {
+			g2.scale(1920/2.0 / image.getWidth(this), 1920/2.0 / image.getWidth(this));
+		} else {
+			g2.scale((double) image.getWidth(this) / 1920/2.0, (double) image.getWidth(this) / 1920/2.0);
+		}
+		} else{
+			if (image.getHeight(this) > 1080/2) {
+				g2.scale(1080/2.0 / image.getHeight(this), 1080/2.0 / image.getHeight(this));
+			} else {
+				g2.scale((double) image.getHeight(this) / 1080/2.0, (double) image.getHeight(this) / 1080/2.0);
+			}
+		}
+
+//		g2.drawImage(image, 0, 0, this);
+		// draw the image behind all other components
 		g2.drawImage(image, 0, 0, this);
+		g2.dispose();
 	}
 
 	@Override

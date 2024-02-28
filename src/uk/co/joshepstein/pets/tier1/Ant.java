@@ -8,17 +8,21 @@ package uk.co.joshepstein.pets.tier1;
 
 import uk.co.joshepstein.food.Food;
 import uk.co.joshepstein.pets.basic.IPet;
+import uk.co.joshepstein.pets.basic.Pet;
 import uk.co.joshepstein.pets.basic.PetTicker;
 import uk.co.joshepstein.pets.basic.PetTier;
-import uk.co.joshepstein.pets.basic.PetType;
 import uk.co.joshepstein.utils.RandomHelper;
 
-import java.util.Random;
+import javax.swing.*;
+import java.awt.*;
 
-public class Ant implements IPet {
+public class Ant extends Pet {
 
 	private int health;
 	private int maxHealth;
+
+	private String texturePath = "src/resources/pets/default/ant.png";
+	private Image texture = null;
 
 	public Ant() {
 		this.maxHealth = RandomHelper.between(1, 5);
@@ -67,5 +71,38 @@ public class Ant implements IPet {
 	@Override
 	public int getMaxHealth() {
 		return maxHealth;
+	}
+
+	public String getTexturePath() {
+		return texturePath;
+	}
+
+	public Image getTexture() {
+		return texture;
+	}
+
+	public void setTexture(Image texture) {
+		this.texture = texture;
+	}
+
+	public void setTexturePath(String texturePath) {
+		this.texturePath = texturePath;
+	}
+
+	public void loadTexture() {
+		if (this.texture == null) {
+			this.texture = new ImageIcon(this.texturePath).getImage();
+			System.out.println("[" + this.getName() + " PET] Loaded texture from [" + this.texturePath + "]");
+		} else {
+			System.out.println("Texture already loaded");
+		}
+	}
+
+	@Override
+	public Image getOrLoadTexture() {
+		if (this.texture == null) {
+			this.loadTexture();
+		}
+		return this.texture;
 	}
 }
